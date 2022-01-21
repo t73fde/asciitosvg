@@ -83,9 +83,9 @@ func CanvasToSVG(c Canvas, noBlur bool, font string, scaleX, scaleY int) []byte 
 					continue
 				}
 
-				switch v.(type) {
+				switch v := v.(type) {
 				case string:
-					opts += fmt.Sprintf("%s=\"%s\" ", k, v.(string))
+					opts += fmt.Sprintf("%s=\"%s\" ", k, v)
 				default:
 					// TODO(dhobsd): Implement.
 					opts += fmt.Sprintf("%s=\"UNIMPLEMENTED\" ", k)

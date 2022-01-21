@@ -66,8 +66,8 @@ func NewCanvas(data []byte, tabWidth int, noBlur bool) (Canvas, error) {
 
 		lines[i] = l
 
-		if i := utf8.RuneCount(lines[i]); i > c.size.X {
-			c.size.X = i
+		if i1 := utf8.RuneCount(lines[i]); i1 > c.size.X {
+			c.size.X = i1
 		}
 	}
 
@@ -449,7 +449,7 @@ func (c *canvas) scanText(start Point) Object {
 		// to do that calculation here.
 		if matches := objTagRE.FindStringSubmatch(t); matches != nil {
 			if targetX, err := strconv.ParseInt(matches[1], 10, 0); err == nil {
-				if targetY, err := strconv.ParseInt(matches[2], 10, 0); err == nil {
+				if targetY, err1 := strconv.ParseInt(matches[2], 10, 0); err1 == nil {
 					for i, o := range c.objects {
 						corner := o.Corners()[0]
 						if corner.X == int(targetX) && corner.Y == int(targetY) {
