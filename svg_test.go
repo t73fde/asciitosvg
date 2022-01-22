@@ -6,8 +6,6 @@ package asciitosvg
 import (
 	"strings"
 	"testing"
-
-	"github.com/maruel/ut"
 )
 
 func TestCanvasToSVG(t *testing.T) {
@@ -116,6 +114,8 @@ func TestCanvasToSVG(t *testing.T) {
 		actual := string(CanvasToSVG(canvas, false, "", 9, 16))
 		// TODO(dhobsd): Use golden file? Worth postponing once output is actually
 		// nice.
-		ut.AssertEqualIndex(t, i, line.length, len(actual))
+		if line.length != len(actual) {
+			t.Errorf("%d: expected length %d, but got %d", i, line.length, len(actual))
+		}
 	}
 }

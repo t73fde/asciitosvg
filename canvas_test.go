@@ -4,10 +4,9 @@
 package asciitosvg
 
 import (
+	"reflect"
 	"strings"
 	"testing"
-
-	"github.com/maruel/ut"
 )
 
 func TestNewCanvas(t *testing.T) {
@@ -439,16 +438,24 @@ func TestNewCanvas(t *testing.T) {
 		}
 		objs := c.Objects()
 		if line.strings != nil {
-			ut.AssertEqualIndex(t, i, line.strings, getStrings(objs))
+			if got := getStrings(objs); !reflect.DeepEqual(line.strings, got) {
+				t.Errorf("%d: expected %q, but got %q", i, line.strings, got)
+			}
 		}
 		if line.texts != nil {
-			ut.AssertEqualIndex(t, i, line.texts, getTexts(objs))
+			if got := getTexts(objs); !reflect.DeepEqual(line.texts, got) {
+				t.Errorf("%d: expected %q, but got %q", i, line.texts, got)
+			}
 		}
 		if line.points != nil {
 			if line.allPoints == false {
-				ut.AssertEqualIndex(t, i, line.points, getCorners(objs))
+				if got := getCorners(objs); !reflect.DeepEqual(line.points, got) {
+					t.Errorf("%d: expected %q, but got %q", i, line.points, got)
+				}
 			} else {
-				ut.AssertEqualIndex(t, i, line.points, getPoints(objs))
+				if got := getPoints(objs); !reflect.DeepEqual(line.points, got) {
+					t.Errorf("%d: expected %q, but got %q", i, line.points, got)
+				}
 			}
 		}
 	}
@@ -518,13 +525,19 @@ func TestNewCanvasBroken(t *testing.T) {
 		}
 		objs := c.Objects()
 		if line.strings != nil {
-			ut.AssertEqualIndex(t, i, line.strings, getStrings(objs))
+			if got := getStrings(objs); !reflect.DeepEqual(line.strings, got) {
+				t.Errorf("%d: expected %q, but got %q", i, line.strings, got)
+			}
 		}
 		if line.texts != nil {
-			ut.AssertEqualIndex(t, i, line.texts, getTexts(objs))
+			if got := getTexts(objs); !reflect.DeepEqual(line.texts, got) {
+				t.Errorf("%d: expected %q, but got %q", i, line.texts, got)
+			}
 		}
 		if line.corners != nil {
-			ut.AssertEqualIndex(t, i, line.corners, getCorners(objs))
+			if got := getCorners(objs); !reflect.DeepEqual(line.corners, got) {
+				t.Errorf("%d: expected %q, but got %q", i, line.corners, got)
+			}
 		}
 	}
 }
@@ -568,8 +581,12 @@ func TestPointsToCorners(t *testing.T) {
 	}
 	for i, line := range data {
 		p, c := pointsToCorners(line.in)
-		ut.AssertEqualIndex(t, i, line.expected, p)
-		ut.AssertEqualIndex(t, i, line.closed, c)
+		if !reflect.DeepEqual(line.expected, p) {
+			t.Errorf("%d: expected %v, but got %v", i, line.expected, p)
+		}
+		if line.closed != c {
+			t.Errorf("%d: expected close == %v, but got %v", i, line.closed, c)
+		}
 	}
 }
 

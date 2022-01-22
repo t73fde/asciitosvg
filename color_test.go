@@ -3,11 +3,7 @@
 
 package asciitosvg
 
-import (
-	"testing"
-
-	"github.com/maruel/ut"
-)
+import "testing"
 
 func TestParseHexColor(t *testing.T) {
 	t.Parallel()
@@ -16,6 +12,7 @@ func TestParseHexColor(t *testing.T) {
 		rgb     []int
 		isError bool
 	}{
+		{"#123", []int{17, 34, 51}, false},
 		{"#fff", []int{255, 255, 255}, false},
 		{"#FFF", []int{255, 255, 255}, false},
 		{"#ffffff", []int{255, 255, 255}, false},
@@ -31,17 +28,20 @@ func TestParseHexColor(t *testing.T) {
 
 	for i, v := range data {
 		r, g, b, err := colorToRGB(v.color)
-
-		switch v.isError {
-		case true:
+		if v.isError {
 			if err == nil {
-				t.Fatalf("Test %d (%s): wanted error, got no error", i, v.color)
+				t.Errorf("%d: colorToRGB(%q) expected error, but got none", i, v.color)
 			}
-		case false:
-			ut.AssertEqualIndex(t, i, err, nil)
+			continue
+		}
 
-			rgb := []int{r, g, b}
-			ut.AssertEqualIndex(t, i, v.rgb, rgb)
+		if err != nil {
+			t.Errorf("%d: colorToRGB(%q) got error %v", i, v.color, err)
+			continue
+		}
+
+		if r != v.rgb[0] || g != v.rgb[1] || b != v.rgb[2] {
+			t.Errorf("%d: colorToRGB(%q) expected %v, but got [%v,%v,%v]", i, v.color, v.rgb, r, g, b)
 		}
 	}
 }
